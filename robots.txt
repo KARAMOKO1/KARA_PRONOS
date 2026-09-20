@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://KARAMOKO1.github.io/KARA_PRONOS/sitemap.xml
