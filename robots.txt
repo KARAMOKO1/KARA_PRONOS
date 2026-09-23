@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://karapronos.website/sitemap.xml
