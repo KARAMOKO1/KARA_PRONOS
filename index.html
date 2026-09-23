@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 <title>KARA PRONOS</title>
-
+<link rel="manifest" href="manifest.json">
+<meta name="apple-touch-icon" href="https://media.api-sports.io/football/teams/541.png">
 <!-- PWA Meta -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -584,6 +585,14 @@ setInterval(() => {
 }, 60 * 1000);
 
 console.log("✅ KARA PRONOS chargé");
-</script>
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => console.log('✅ SW enregistré'))
+      .catch((err) => console.error('❌ SW erreur:', err));
+  });
+}</script>
 </body>
 </html>
