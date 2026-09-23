@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kara-pronos-v1';
+const CACHE_NAME = 'kara-pronos-v10';
 const urlsToCache = [
   '/',
   '/index.html',
