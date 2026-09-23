@@ -1,0 +1,49 @@
+{
+  "name": "KARA PRONOS",
+  "short_name": "KARA",
+  "description": "Les pronostics football du jour - Ligue Europa, Liga, Premier League, Serie A, Bundesliga, Ligue 1 et plus",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#06101c",
+  "theme_color": "#20e58a",
+  "lang": "fr",
+  "dir": "ltr",
+  "id": "karapronos-website",
+  "categories": ["sports", "entertainment", "news"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "https://media.api-sports.io/football/teams/541.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://media.api-sports.io/football/teams/541.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://media.api-sports.io/football/teams/541.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Matchs du jour",
+      "short_name": "Matchs",
+      "url": "/#matches"
+    },
+    {
+      "name": "Coupon du jour",
+      "short_name": "Coupon",
+      "url": "/#coupons"
+    }
+  ]
+}
