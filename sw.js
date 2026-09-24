@@ -1,9 +1,5 @@
-const CACHE_NAME = 'kara-pronos-v10';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-];
+const CACHE_NAME = 'kara-pronos-v12';
+const urlsToCache = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -18,9 +14,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
+          if (cacheName !== CACHE_NAME) return caches.delete(cacheName);
         })
       );
     }).then(() => self.clients.claim())
@@ -28,9 +22,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.includes('supabase.co')) {
-    return;
-  }
+  if (event.request.url.includes('supabase.co')) return;
 
   event.respondWith(
     caches.match(event.request)
@@ -43,10 +35,8 @@ self.addEventListener('fetch', (event) => {
             event.request.method === 'GET' &&
             !event.request.url.includes('supabase')
           ) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone);
-            });
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
           return networkResponse;
         });
