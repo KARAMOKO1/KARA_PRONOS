@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>KARA PRONOS</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="https://karapronos.website/icon-512.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KARA">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#06101c;--card:#0d1b2b;--card2:#112338;
+  --green:#20e58a;--white:#f5f8fb;--muted:#8ea0b5;
+  --line:rgba(255,255,255,.07);--red:#ff5364;--gold:#ffc857;
+}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(32,229,138,.13),transparent 28%),
+    radial-gradient(circle at 0% 30%,rgba(32,120,255,.10),transparent 25%),
+    var(--bg);
+  color:var(--white);min-height:100vh;padding-bottom:100px;
+}
+button{font-family:inherit;border:0;cursor:pointer;}
+.app{max-width:700px;margin:auto;}
+
+.header{padding:20px 18px 14px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:43px;height:43px;border-radius:13px;background:linear-gradient(135deg,var(--green),#0eb56b);display:flex;align-items:center;justify-content:center;color:#04120d;font-size:22px;font-weight:900;}
+.logo-text{font-size:20px;font-weight:900;}
+.logo-text span{color:var(--green);}
+.bell{width:42px;height:42px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:white;font-size:18px;}
+
+.hero{margin:8px 18px 18px;padding:24px 20px;border-radius:24px;background:linear-gradient(135deg,rgba(32,229,138,.18),rgba(17,35,56,.85)),var(--card);border:1px solid rgba(32,229,138,.13);}
+.hero small{color:var(--green);font-weight:bold;letter-spacing:1.2px;}
+.hero h1{margin-top:8px;font-size:28px;line-height:1.1;}
+.hero p{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.5;}
+.hero-button{margin-top:18px;padding:12px 17px;border-radius:12px;background:var(--green);color:#03150d;font-weight:900;}
+
+.promo-banner{margin:0 18px 18px;padding:14px 18px;border-radius:16px;background:linear-gradient(135deg,#ffc857,#ff9f1c);color:#0a1626;display:flex;align-items:center;justify-content:space-between;font-weight:900;}
+.promo-banner small{font-size:11px;opacity:.8;display:block;}
+.promo-code{background:#0a1626;color:#ffc857;padding:8px 14px;border-radius:10px;font-size:16px;letter-spacing:2px;font-weight:900;}
+
+/* CALENDRIER 3 JOURS */
+.date-calendar{margin:0 18px 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.date-btn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;color:var(--muted);transition:.2s;cursor:pointer;}
+.date-btn .day{font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;}
+.date-btn .num{font-size:22px;font-weight:900;color:white;margin:4px 0;}
+.date-btn .month{font-size:9px;opacity:.7;}
+.date-btn.active{background:var(--green);border-color:var(--green);transform:scale(1.02);box-shadow:0 8px 20px rgba(32,229,138,.25);}
+.date-btn.active .day,.date-btn.active .num,.date-btn.active .month{color:#052016;}
+.date-btn.today::after{content:"Aujourd'hui";display:block;font-size:8px;margin-top:4px;opacity:.7;text-transform:uppercase;letter-spacing:.5px;}
+.date-btn.active.today::after{color:#052016;}
+
+.section{padding:0 18px;margin-top:22px;}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;}
+.section-title h2{font-size:18px;}
+.section-title span{color:var(--green);font-size:12px;font-weight:bold;}
+
+.match-card{background:linear-gradient(145deg,var(--card),#0a1726);border:1px solid var(--line);border-radius:20px;margin-bottom:13px;padding:15px;position:relative;}
+.match-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;margin-bottom:14px;}
+.teams{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;text-align:center;}
+.team{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:13px;font-weight:bold;}
+.team-logo{width:46px;height:46px;border-radius:14px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:23px;overflow:hidden;}
+.team-logo img{width:100%;height:100%;object-fit:contain;}
+.time{font-size:18px;font-weight:900;}
+.time small{display:block;color:var(--muted);font-size:9px;font-weight:normal;margin-top:3px;}
+.prediction{margin-top:15px;padding:11px;border-radius:13px;background:rgba(32,229,138,.07);border:1px solid rgba(32,229,138,.10);display:flex;justify-content:space-between;align-items:center;}
+.prediction-left small{color:var(--muted);font-size:10px;display:block;margin-bottom:3px;}
+.prediction-left strong{font-size:13px;}
+.odd{background:var(--green);color:#04160e;padding:8px 11px;border-radius:9px;font-weight:900;font-size:13px;}
+.odd.empty{background:var(--card2);color:var(--muted);}
+
+.coupon{background:linear-gradient(145deg,#10283a,#0b1928);border-radius:22px;padding:18px;border:1px solid rgba(255,200,87,.14);margin-bottom:14px;}
+.coupon-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+.coupon-title{display:flex;gap:10px;align-items:center;}
+.coupon-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,200,87,.12);display:flex;align-items:center;justify-content:center;font-size:21px;}
+.coupon h3{font-size:15px;}
+.coupon small{color:var(--muted);}
+.cote{color:var(--gold);font-weight:900;font-size:18px;}
+.coupon-item{display:flex;justify-content:space-between;padding:11px 0;border-top:1px solid var(--line);font-size:12px;}
+.coupon-item span:last-child{color:var(--green);font-weight:bold;}
+.coupon-items-container{max-height:500px;overflow-y:auto;padding-right:5px;}
+.coupon-items-container::-webkit-scrollbar{width:4px;}
+.coupon-items-container::-webkit-scrollbar-thumb{background:rgba(32,229,138,.3);border-radius:2px;}
+.coupon-code-box{margin-top:12px;padding:12px;border-radius:12px;background:rgba(255,200,87,.08);border:1px dashed rgba(255,200,87,.4);text-align:center;}
+.coupon-code-box small{color:var(--muted);font-size:10px;display:block;margin-bottom:6px;}
+.coupon-code-box strong{color:var(--gold);font-size:18px;letter-spacing:3px;}
+.copy-btn{margin-top:8px;padding:8px 16px;border-radius:8px;background:var(--gold);color:#0a1626;font-weight:900;font-size:11px;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:80px;background:#0a1626;border-top:2px solid #20e58a;display:flex;justify-content:space-around;align-items:center;z-index:99999;}
+.nav-btn{flex:1;height:100%;background:transparent;color:#718399;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:bold;border:0;padding:0;font-family:inherit;touch-action:manipulation;}
+.nav-btn:active{background:rgba(32,229,138,.1);}
+.nav-btn.active{color:#20e58a;}
+.nav-btn .icon{font-size:22px;display:block;line-height:1;}
+
+.page{display:none;}
+.page.active{display:block;}
+.empty{text-align:center;padding:45px 20px;color:var(--muted);}
+.empty div{font-size:40px;margin-bottom:10px;}
+.loader{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+.loader span{display:inline-block;width:24px;height:24px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:#17283a;border:1px solid var(--line);padding:12px 18px;border-radius:13px;font-size:12px;opacity:0;pointer-events:none;transition:.3s;z-index:999999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <div class="logo-text">KARA <span>PRONOS</span></div>
+  </div>
+  <button class="bell" type="button">🔔</button>
+</header>
+
+<main id="home" class="page active">
+  <section class="hero">
+    <small>⚡ KARA PRONOS</small>
+    <h1>Les pronostics<br>du jour.</h1>
+    <p>Retrouvez les matchs, pronostics et coupons du jour.</p>
+    <button class="hero-button" type="button" data-goto="matches">Voir les matchs →</button>
+  </section>
+
+  <div class="promo-banner">
+    <div>
+      <small>CODE PROMO 1XBET</small>
+      <span>Inscris-toi et profite</span>
+    </div>
+    <div class="promo-code">KARA23</div>
+  </div>
+
+  <!-- CALENDRIER 3 JOURS — SANS COMPTEUR -->
+  <div class="date-calendar" id="dateCalendar"></div>
+
+  <section class="section">
+    <div class="section-title"><h2>🔥 À la une</h2><span id="homeDateLabel">AUJOURD'HUI</span></div>
+    <div id="homeMatches"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><h2>🧾 Coupon du jour</h2><span>1XBET</span></div>
+    <div id="homeCoupon"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+</main>
+
+<main id="matches" class="page">
+  <div class="date-calendar" id="matchesCalendar" style="margin-top:18px;"></div>
+  <section class="section">
+    <div class="section-title"><h2>⚽ Tous les matchs</h2><span id="matchesDateLabel">AUJOURD'HUI</span></div>
+    <div id="allMatches"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+</main>
+
+<main id="predictions" class="page">
+  <div class="date-calendar" id="predsCalendar" style="margin-top:18px;"></div>
+  <section class="section">
+    <div class="section-title"><h2>🎯 Pronostics</h2><span>DU JOUR</span></div>
+    <div id="predictionList"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+</main>
+
+<main id="coupons" class="page">
+  <section class="section" style="margin-top:18px">
+    <div class="section-title"><h2>🧾 Coupon du jour</h2><span>1XBET</span></div>
+    <div id="couponsList"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+</main>
+
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-page="home" type="button"><span class="icon">🏠</span><span>Accueil</span></button>
+  <button class="nav-btn" data-page="matches" type="button"><span class="icon">⚽</span><span>Matchs</span></button>
+  <button class="nav-btn" data-page="predictions" type="button"><span class="icon">🎯</span><span>Pronos</span></button>
+  <button class="nav-btn" data-page="coupons" type="button"><span class="icon">🧾</span><span>Coupons</span></button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* CONFIG SUPABASE */
+const SUPABASE_URL = "https://mdsjhcebhzvcdmgzrltw.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_tWs_vtWAyUKjX737dOn37Q_FWOvpGsR";
+
+let supabaseClient = null;
+try {
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  console.log("✅ Supabase connecté");
+} catch(e) {
+  console.error("❌ Erreur Supabase:", e);
+}
+
+let COUPON_CODE_1XBET = "";
+let selectedDate = new Date();
+
+/* NAVIGATION */
+function goTo(page) {
+  const target = document.getElementById(page);
+  if (!target) return;
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  target.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b => {
+    b.classList.remove("active");
+    if (b.getAttribute("data-page") === page) b.classList.add("active");
+  });
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener("click", function(e) {
+  const navBtn = e.target.closest(".nav-btn");
+  if (navBtn) {
+    const page = navBtn.getAttribute("data-page");
+    if (page) goTo(page);
+    return;
+  }
+  const gotoBtn = e.target.closest("[data-goto]");
+  if (gotoBtn) {
+    const page = gotoBtn.getAttribute("data-goto");
+    if (page) goTo(page);
+  }
+});
+
+/* CALENDRIER 3 JOURS — GLISSANT */
+function renderCalendar() {
+  const jours = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
+  const mois = ["JANV", "FÉVR", "MARS", "AVR", "MAI", "JUIN", "JUIL", "AOÛT", "SEPT", "OCT", "NOV", "DÉC"];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const html = [0, 1, 2].map(offset => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + offset);
+    const isToday = offset === 0;
+    const isActive = d.toDateString() === selectedDate.toDateString();
+    return `
+      <div class="date-btn ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}" data-offset="${offset}">
+        <div class="day">${jours[d.getDay()]}</div>
+        <div class="num">${d.getDate()}</div>
+        <div class="month">${mois[d.getMonth()]}</div>
+      </div>
+    `;
+  }).join("");
+
+  ["dateCalendar", "matchesCalendar", "predsCalendar"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  });
+
+  document.querySelectorAll(".date-btn").forEach(btn => {
+    btn.onclick = () => {
+      const offset = parseInt(btn.getAttribute("data-offset"), 10);
+      const d = new Date(today);
+      d.setDate(today.getDate() + offset);
+      selectedDate = d;
+      renderCalendar();
+      fetchMatchesByDate();
+      updateDateLabels();
+    };
+  });
+}
+
+function updateDateLabels() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diff = Math.round((selectedDate - today) / (1000 * 60 * 60 * 24));
+  const label = diff === 0 ? "AUJOURD'HUI" : diff === 1 ? "DEMAIN" : "APRÈS-DEMAIN";
+  const homeLbl = document.getElementById("homeDateLabel");
+  const matchLbl = document.getElementById("matchesDateLabel");
+  if (homeLbl) homeLbl.textContent = label;
+  if (matchLbl) matchLbl.textContent = label;
+}
+
+/* CARTE MATCH */
+function matchCard(m) {
+  const hLogo = m.homeLogo && m.homeLogo.startsWith("http")
+    ? '<img src="' + m.homeLogo + '" alt="' + m.home + '" onerror="this.parentNode.textContent=\'⚽\'">'
+    : '⚽';
+  const aLogo = m.awayLogo && m.awayLogo.startsWith("http")
+    ? '<img src="' + m.awayLogo + '" alt="' + m.away + '" onerror="this.parentNode.textContent=\'⚽\'">'
+    : '⚽';
+  const oddDisplay = m.odd ? m.odd : "-";
+  const oddClass = m.odd ? "odd" : "odd empty";
+
+  return '<div class="match-card">' +
+    '<div class="match-top"><div class="league">' + m.league + '</div><div>' + m.status + '</div></div>' +
+    '<div class="teams">' +
+      '<div class="team"><div class="team-logo">' + hLogo + '</div>' + m.home + '</div>' +
+      '<div class="time">' + m.time + '<small>COUP D\'ENVOI</small></div>' +
+      '<div class="team"><div class="team-logo">' + aLogo + '</div>' + m.away + '</div>' +
+    '</div>' +
+    '<div class="prediction">' +
+      '<div class="prediction-left"><small>PRONOSTIC KARA' + (m.confidence ? ' • ' + m.confidence + '%' : '') + '</small><strong>' + m.prediction + '</strong></div>' +
+      '<div class="' + oddClass + '">' + oddDisplay + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function formatStatus(s) {
+  const map = { scheduled: "À venir", live: "En cours", finished: "Terminé", postponed: "Reporté" };
+  return map[s] || s || "À venir";
+}
+
+/* CHARGEMENT DES MATCHS PAR DATE */
+async function fetchMatchesByDate() {
+  if (!supabaseClient) return;
+
+  const dayStart = new Date(selectedDate);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(selectedDate);
+  dayEnd.setHours(23, 59, 59, 999);
+
+  const { data, error } = await supabaseClient
+    .from("predictions")
+    .select(`
+      prediction_value, prediction_type, confidence, odd,
+      match:matches (
+        home_team, away_team, home_logo, away_logo, match_date, status,
+        championship:championships (name, flag_emoji)
+      )
+    `)
+    .gte("match.match_date", dayStart.toISOString())
+    .lte("match.match_date", dayEnd.toISOString());
+
+  if (error) {
+    console.error("❌ Erreur:", error);
+    renderMatches([], []);
+    return;
+  }
+
+  const matches = data
+    .filter(i => i.match)
+    .map(item => {
+      const matchDate = new Date(item.match.match_date);
+      return {
+        league: (item.match.championship ? (item.match.championship.flag_emoji || "🏆") + " " + item.match.championship.name : "🏆"),
+        status: formatStatus(item.match.status),
+        home: item.match.home_team,
+        away: item.match.away_team,
+        homeLogo: item.match.home_logo,
+        awayLogo: item.match.away_logo,
+        time: matchDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
+        prediction: item.prediction_value,
+        odd: item.odd,
+        confidence: item.confidence,
+        _rawDate: matchDate
+      };
+    })
+    .sort((a, b) => a._rawDate - b._rawDate);
+
+  renderMatches(matches, matches);
+}
+
+function renderMatches(homeList, allList) {
+  const home = document.getElementById("homeMatches");
+  const all = document.getElementById("allMatches");
+  const preds = document.getElementById("predictionList");
+
+  if (!allList || allList.length === 0) {
+    const e = '<div class="empty"><div>📭</div><p>Aucun match pour cette date.<br>Essaie une autre date !</p></div>';
+    home.innerHTML = e; all.innerHTML = e; preds.innerHTML = e;
+    return;
+  }
+  home.innerHTML = homeList.slice(0, 3).map(matchCard).join("");
+  all.innerHTML = allList.map(matchCard).join("");
+  preds.innerHTML = allList.map(matchCard).join("");
+}
+
+/* CODE COUPON */
+async function fetchCouponCode() {
+  if (!supabaseClient) return;
+  const today = new Date().toISOString().split("T")[0];
+  try {
+    const { data } = await supabaseClient
+      .from("coupons")
+      .select("coupon_code")
+      .eq("coupon_date", today)
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    COUPON_CODE_1XBET = (data && data.coupon_code) ? data.coupon_code.trim() : "";
+  } catch(e) {
+    COUPON_CODE_1XBET = "";
+  }
+}
+
+/* COUPON DU JOUR */
+async function fetchCoupon() {
+  if (!supabaseClient) return;
+  await fetchCouponCode();
+
+  const today = new Date();
+  const dayStart = new Date(today);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(today);
+  dayEnd.setHours(23, 59, 59, 999);
+
+  const { data } = await supabaseClient
+    .from("predictions")
+    .select(`
+      prediction_value, odd, confidence, is_featured,
+      match:matches (home_team, away_team, match_date)
+    `)
+    .gte("match.match_date", dayStart.toISOString())
+    .lte("match.match_date", dayEnd.toISOString())
+    .eq("is_featured", true);
+
+  const container = document.getElementById("couponsList");
+  const homeContainer = document.getElementById("homeCoupon");
+
+  if (!data || data.length === 0) {
+    const e = '<div class="empty"><div>📭</div><p>Aucun coupon pour aujourd\'hui.</p></div>';
+    container.innerHTML = e; homeContainer.innerHTML = e;
+    return;
+  }
+
+  const items = '<div class="coupon-items-container">' +
+    data.filter(i => i.match).map(i =>
+      '<div class="coupon-item">' +
+        '<span>' + i.match.home_team + ' - ' + i.match.away_team + '</span>' +
+        '<span>' + i.prediction_value + (i.odd ? ' • ' + i.odd : '') + '</span>' +
+      '</div>'
+    ).join("") +
+  '</div>';
+
+  const totalOdd = data.reduce((sum, i) => sum * (parseFloat(i.odd) || 1), 1).toFixed(2);
+
+  let codeBlock;
+  if (COUPON_CODE_1XBET) {
+    codeBlock =
+      '<div class="coupon-code-box">' +
+        '<small>CODE COUPON 1XBET</small>' +
+        '<strong>' + COUPON_CODE_1XBET + '</strong>' +
+        '<br><button class="copy-btn" onclick="copyCouponCode()">📋 Copier le code</button>' +
+      '</div>';
+  } else {
+    codeBlock =
+      '<div class="coupon-code-box">' +
+        '<small>CODE COUPON 1XBET</small>' +
+        '<strong style="color:#8ea0b5;font-size:12px;letter-spacing:0">En cours de création...</strong>' +
+      '</div>';
+  }
+
+  const couponHTML =
+    '<div class="coupon">' +
+      '<div class="coupon-head">' +
+        '<div class="coupon-title">' +
+          '<div class="coupon-icon">🔥</div>' +
+          '<div><h3>Coupon du jour</h3><small>' + data.length + ' sélections</small></div>' +
+        '</div>' +
+        '<div class="cote">' + totalOdd + '</div>' +
+      '</div>' +
+      items + codeBlock +
+    '</div>';
+
+  container.innerHTML = couponHTML;
+  homeContainer.innerHTML = couponHTML;
+}
+
+function copyCouponCode() {
+  if (!COUPON_CODE_1XBET) return;
+  navigator.clipboard.writeText(COUPON_CODE_1XBET)
+    .then(() => showToast("Code " + COUPON_CODE_1XBET + " copié ✓"))
+    .catch(() => showToast("Code : " + COUPON_CODE_1XBET));
+}
+
+/* TOAST */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* CHANGEMENT DE DATE À MINUIT — SILENCIEUX */
+function checkDateChange() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const currentDate = today.toDateString();
+
+  if (window._lastDate !== currentDate) {
+    console.log("📅 MINUIT — Changement de date (silencieux)");
+    window._lastDate = currentDate;
+
+    selectedDate = new Date();
+    selectedDate.setHours(0, 0, 0, 0);
+
+    renderCalendar();
+    updateDateLabels();
+    fetchMatchesByDate();
+    fetchCoupon();
+    // ⚠️ PAS de showToast ici — silencieux
+  }
+}
+
+/* DÉCLENCHEUR DE MINUIT */
+function scheduleMidnightUpdate() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const msUntilMidnight = midnight - now;
+
+  setTimeout(() => {
+    checkDateChange();
+    scheduleMidnightUpdate();
+  }, msUntilMidnight);
+}
+
+/* SERVICE WORKER */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('✅ SW enregistré'))
+      .catch((err) => console.error('❌ SW erreur:', err));
+  });
+}
+
+/* INITIALISATION */
+(function init() {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  selectedDate = now;
+  window._lastDate = now.toDateString();
+
+  renderCalendar();
+  updateDateLabels();
+  fetchMatchesByDate();
+  fetchCoupon();
+
+  scheduleMidnightUpdate();
+})();
+
+setInterval(() => {
+  checkDateChange();
+}, 60 * 1000);
+
+console.log("✅ KARA PRONOS chargé");
+</script>
+</body>
+  </html>
