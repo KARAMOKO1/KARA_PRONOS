@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kara-pronos-v14';
+const CACHE_NAME = 'kara-pronos-v27';
 const urlsToCache = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -23,7 +23,6 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('supabase.co')) return;
-
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
