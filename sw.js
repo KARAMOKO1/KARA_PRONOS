@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kara-pronos-v30';
+const CACHE_NAME = 'kara-pronos-v31';
 const urlsToCache = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
