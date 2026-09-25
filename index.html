@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>KARA PRONOS</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="https://karapronos.website/icon-512.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KARA">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{--bg:#06101c;--card:#0d1b2b;--card2:#112338;--green:#20e58a;--white:#f5f8fb;--muted:#8ea0b5;--line:rgba(255,255,255,.07);--red:#ff5364;--gold:#ffc857;}
+body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 85% 0%,rgba(32,229,138,.13),transparent 28%),radial-gradient(circle at 0% 30%,rgba(32,120,255,.10),transparent 25%),var(--bg);color:var(--white);min-height:100vh;padding-bottom:30px;}
+button{font-family:inherit;border:0;cursor:pointer;}
+.app{max-width:700px;margin:auto;}
+.header{padding:20px 18px 14px;display:flex;align-items:center;justify-content:space-between;}
+.header-left{display:flex;align-items:center;gap:10px;}
+.back-btn{width:42px;height:42px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:white;font-size:20px;font-weight:900;display:none;align-items:center;justify-content:center;}
+.back-btn.visible{display:flex;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:43px;height:43px;border-radius:13px;background:linear-gradient(135deg,var(--green),#0eb56b);display:flex;align-items:center;justify-content:center;color:#04120d;font-size:22px;font-weight:900;}
+.logo-text{font-size:20px;font-weight:900;}
+.logo-text span{color:var(--green);}
+.bell{width:42px;height:42px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:white;font-size:18px;position:relative;}
+.bell.on::after{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);}
+.hero{margin:8px 18px 18px;padding:24px 20px;border-radius:24px;background:linear-gradient(135deg,rgba(32,229,138,.18),rgba(17,35,56,.85)),var(--card);border:1px solid rgba(32,229,138,.13);}
+.hero small{color:var(--green);font-weight:bold;letter-spacing:1.2px;}
+.hero h1{margin-top:8px;font-size:28px;line-height:1.1;}
+.hero p{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.5;}
+.promo-banner{margin:0 18px 22px;padding:14px 18px;border-radius:16px;background:linear-gradient(135deg,#ffc857,#ff9f1c);color:#0a1626;display:flex;align-items:center;justify-content:space-between;font-weight:900;cursor:pointer;transition:.2s;position:relative;}
+.promo-banner:active{transform:scale(.98);}
+.promo-banner small{font-size:11px;opacity:.8;display:block;}
+.promo-banner .copy-hint{position:absolute;bottom:6px;right:14px;font-size:9px;opacity:.7;letter-spacing:.5px;}
+.promo-code{background:#0a1626;color:#ffc857;padding:8px 14px;border-radius:10px;font-size:16px;letter-spacing:2px;font-weight:900;display:flex;align-items:center;gap:6px;}
+.services-title{padding:0 18px;margin-bottom:14px;font-size:20px;font-weight:900;}
+
+/* SERVICES - GRILLE */
+.services-grid{margin:0 18px 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+
+/* CARTES 1 & 2 */
+.service-card{background:linear-gradient(145deg,var(--card),#0a1726);border-radius:22px;padding:18px 14px;cursor:pointer;position:relative;transition:.2s;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+.service-card:active{transform:scale(.97);border-color:var(--green);}
+.service-card.vip{border-color:rgba(255,200,87,.3);background:linear-gradient(145deg,rgba(255,200,87,.08),#0a1726);}
+.service-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.service-icon.green{background:rgba(32,229,138,.15);}
+.service-icon.gold{background:rgba(255,200,87,.15);}
+.service-icon.blue{background:rgba(32,120,255,.15);}
+.service-title{font-size:14px;font-weight:900;color:var(--white);}
+.service-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.vip-badge{position:absolute;top:10px;right:10px;background:var(--gold);color:#0a1626;padding:3px 8px;border-radius:6px;font-size:9px;font-weight:900;letter-spacing:.5px;}
+
+/* ══════ CARTE 3 - BELLE ET PLEINE LARGEUR ══════ */
+.matches-card{
+  grid-column:span 2;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  text-align:left !important;
+  padding:20px !important;
+  background:linear-gradient(135deg,rgba(32,120,255,.15),rgba(32,229,138,.08)),linear-gradient(145deg,var(--card),#0a1726) !important;
+  border:1px solid rgba(32,120,255,.25) !important;
+  gap:16px !important;
+  max-width:100% !important;
+  margin:0 !important;
+}
+.matches-card:active{transform:scale(.98);}
+.matches-card .service-icon{width:60px;height:60px;font-size:30px;flex-shrink:0;}
+.matches-card .service-info-matches{flex:1;}
+.matches-card .service-title{font-size:16px;margin-bottom:4px;}
+.matches-card .service-desc{font-size:12px;}
+.matches-card .service-arrow{color:#4a9eff;font-size:22px;font-weight:900;flex-shrink:0;}
+
+.date-calendar{margin:0 18px 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.date-btn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;color:var(--muted);transition:.2s;cursor:pointer;}
+.date-btn .day{font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;}
+.date-btn .num{font-size:22px;font-weight:900;color:white;margin:4px 0;}
+.date-btn .month{font-size:9px;opacity:.7;}
+.date-btn.active{background:var(--green);border-color:var(--green);transform:scale(1.02);box-shadow:0 8px 20px rgba(32,229,138,.25);}
+.date-btn.active .day,.date-btn.active .num,.date-btn.active .month{color:#052016;}
+.date-btn.today::after{content:"Aujourd'hui";display:block;font-size:8px;margin-top:4px;opacity:.7;text-transform:uppercase;letter-spacing:.5px;}
+.date-btn.active.today::after{color:#052016;}
+
+.section{padding:0 18px;margin-top:22px;}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;}
+.section-title h2{font-size:18px;}
+.section-title span{color:var(--green);font-size:12px;font-weight:bold;}
+.match-card{background:linear-gradient(145deg,var(--card),#0a1726);border:1px solid var(--line);border-radius:20px;margin-bottom:13px;padding:15px;position:relative;}
+.match-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;margin-bottom:14px;}
+.teams{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;text-align:center;}
+.team{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:13px;font-weight:bold;}
+.team-logo{width:46px;height:46px;border-radius:14px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:23px;overflow:hidden;}
+.team-logo img{width:100%;height:100%;object-fit:contain;}
+.time{font-size:18px;font-weight:900;}
+.time small{display:block;color:var(--muted);font-size:9px;font-weight:normal;margin-top:3px;}
+.prediction{margin-top:15px;padding:11px;border-radius:13px;background:rgba(32,229,138,.07);border:1px solid rgba(32,229,138,.10);display:flex;justify-content:space-between;align-items:center;}
+.prediction-left small{color:var(--muted);font-size:10px;display:block;margin-bottom:3px;}
+.prediction-left strong{font-size:13px;}
+.odd{background:var(--green);color:#04160e;padding:8px 11px;border-radius:9px;font-weight:900;font-size:13px;}
+.odd.empty{background:var(--card2);color:var(--muted);}
+.coupon{background:linear-gradient(145deg,#10283a,#0b1928);border-radius:22px;padding:18px;border:1px solid rgba(255,200,87,.14);margin-bottom:14px;}
+.coupon-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+.coupon-title{display:flex;gap:10px;align-items:center;}
+.coupon-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,200,87,.12);display:flex;align-items:center;justify-content:center;font-size:21px;}
+.coupon h3{font-size:15px;}
+.coupon small{color:var(--muted);}
+.cote{color:var(--gold);font-weight:900;font-size:18px;}
+.coupon-item{display:flex;justify-content:space-between;padding:11px 0;border-top:1px solid var(--line);font-size:12px;gap:10px;}
+.coupon-item span:first-child{flex:1;}
+.coupon-item span:last-child{color:var(--green);font-weight:bold;text-align:right;white-space:nowrap;}
+.coupon-items-container{max-height:600px;overflow-y:auto;padding-right:5px;}
+.coupon-items-container::-webkit-scrollbar{width:4px;}
+.coupon-items-container::-webkit-scrollbar-thumb{background:rgba(32,229,138,.3);border-radius:2px;}
+.coupon-code-box{margin-top:12px;padding:12px;border-radius:12px;background:rgba(255,200,87,.08);border:1px dashed rgba(255,200,87,.4);text-align:center;}
+.coupon-code-box small{color:var(--muted);font-size:10px;display:block;margin-bottom:6px;}
+.coupon-code-box strong{color:var(--gold);font-size:18px;letter-spacing:3px;}
+.copy-btn{margin-top:8px;padding:8px 16px;border-radius:8px;background:var(--gold);color:#0a1626;font-weight:900;font-size:11px;}
+.vip-hero{margin:18px;padding:24px 20px;border-radius:24px;background:linear-gradient(135deg,rgba(255,200,87,.2),rgba(17,35,56,.9)),var(--card);border:1px solid rgba(255,200,87,.3);text-align:center;}
+.vip-hero h1{font-size:22px;font-weight:900;color:var(--gold);}
+.vip-hero p{margin-top:8px;color:var(--muted);font-size:13px;}
+.vip-price{margin:0 18px 18px;text-align:center;padding:20px;background:linear-gradient(135deg,rgba(32,229,138,.15),rgba(255,200,87,.15));border-radius:20px;border:1px solid rgba(255,200,87,.3);}
+.vip-price .price{font-size:36px;font-weight:900;color:var(--gold);}
+.vip-price .period{color:var(--muted);font-size:13px;margin-top:4px;}
+.vip-active{margin:18px;padding:20px;background:linear-gradient(135deg,rgba(32,229,138,.2),rgba(32,229,138,.05));border-radius:20px;border:1px solid rgba(32,229,138,.3);text-align:center;}
+.vip-active h2{color:var(--green);font-size:20px;}
+.vip-active p{color:var(--muted);font-size:13px;margin-top:8px;}
+.pay-option{display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;cursor:pointer;transition:.2s;}
+.pay-option:active{transform:scale(.98);border-color:var(--green);}
+.pay-logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;}
+.pay-option-info{flex:1;}
+.pay-option-info strong{font-size:14px;display:block;}
+.pay-option-info small{color:var(--muted);font-size:11px;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;z-index:100000;align-items:center;justify-content:center;padding:20px;}
+.modal.active{display:flex;}
+.modal-content{background:var(--card);border-radius:20px;padding:22px;width:100%;max-width:420px;border:1px solid var(--line);}
+.modal-content h3{font-size:18px;margin-bottom:16px;}
+.notif-toggle{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);}
+.notif-toggle:last-of-type{border-bottom:0;}
+.switch{position:relative;width:50px;height:28px;background:var(--card2);border-radius:14px;transition:.2s;cursor:pointer;}
+.switch.on{background:var(--green);}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;background:white;border-radius:50%;transition:.2s;}
+.switch.on::after{left:25px;}
+.modal-btn{width:100%;padding:14px;border-radius:12px;background:var(--green);color:#04160e;font-weight:900;margin-top:16px;font-size:14px;}
+.page{display:none;}
+.page.active{display:block;}
+.empty{text-align:center;padding:45px 20px;color:var(--muted);}
+.empty div{font-size:40px;margin-bottom:10px;}
+.loader{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+.loader span{display:inline-block;width:24px;height:24px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:#17283a;border:1px solid var(--line);padding:12px 18px;border-radius:13px;font-size:12px;opacity:0;pointer-events:none;transition:.3s;z-index:999999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="header">
+  <div class="header-left">
+    <button class="back-btn" id="backBtn" type="button" onclick="goBack()">←</button>
+    <div class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">KARA <span>PRONOS</span></div>
+    </div>
+  </div>
+  <button class="bell" id="bellBtn" type="button" onclick="openNotifPanel()">🔔</button>
+</header>
+
+<main id="home" class="page active">
+  <section class="hero">
+    <small>⚡ KARA PRONOS</small>
+    <h1>Les pronostics<br>du jour.</h1>
+    <p>Choisissez votre service ci-dessous.</p>
+  </section>
+
+  <div class="promo-banner" onclick="copyPromoCode()">
+    <div><small>CODE PROMO 1XBET</small><span>Inscris-toi et profite</span></div>
+    <div class="promo-code">KARA23 <span style="font-size:12px;">📋</span></div>
+    <span class="copy-hint">Appuyez pour copier</span>
+  </div>
+
+  <div class="services-title">Nos Services</div>
+  <div class="services-grid">
+    <div class="service-card" onclick="goTo('coupons')">
+      <div class="service-icon green">🎁</div>
+      <div class="service-title">Coupon Gratuit</div>
+      <div class="service-desc">Le coupon du jour</div>
+    </div>
+    <div class="service-card vip" onclick="goTo('vip')">
+      <div class="vip-badge">VIP</div>
+      <div class="service-icon gold">🏆</div>
+      <div class="service-title">VIP</div>
+      <div class="service-desc">Coupon premium</div>
+    </div>
+    <div class="service-card matches-card" onclick="goTo('matches')">
+      <div class="service-icon blue">⚽</div>
+      <div class="service-info-matches">
+        <div class="service-title">Matchs & Pronostics</div>
+        <div class="service-desc">Tous les matchs sur 3 jours</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+</main>
+
+<main id="coupons" class="page">
+  <section class="section" style="margin-top:8px">
+    <div class="section-title"><h2>🎁 Coupon Gratuit</h2><span>1XBET</span></div>
+    <div id="couponsList"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+</main>
+
+<main id="vip" class="page">
+  <div id="vipContent"></div>
+</main>
+
+<main id="matches" class="page">
+  <div class="date-calendar" id="matchesCalendar" style="margin-top:8px;"></div>
+  <section class="section">
+    <div class="section-title"><h2>⚽ Matchs & Pronostics</h2><span id="matchesDateLabel">AUJOURD'HUI</span></div>
+    <div id="allMatches"><div class="loader"><span></span><br>Chargement...</div></div>
+  </section>
+</main>
+
+</div>
+
+<div class="modal" id="notifModal">
+  <div class="modal-content">
+    <h3>🔔 Notifications</h3>
+    <div class="notif-toggle">
+      <div>
+        <strong style="font-size:14px;">Coupons Gratuits</strong>
+        <div style="color:var(--muted);font-size:11px;">Reçois tous les coupons gratuits</div>
+      </div>
+      <div class="switch" id="switchFree" onclick="toggleNotif('free')"></div>
+    </div>
+    <div class="notif-toggle">
+      <div>
+        <strong style="font-size:14px;">Coupons VIP 🏆</strong>
+        <div style="color:var(--muted);font-size:11px;">Réservé aux abonnés VIP</div>
+      </div>
+      <div class="switch" id="switchVip" onclick="toggleNotif('vip')"></div>
+    </div>
+    <button class="modal-btn" onclick="closeNotifPanel()">Fermer</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://mdsjhcebhzvcdmgzrltw.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_tWs_vtWAyUKjX737dOn37Q_FWOvpGsR";
+const WAVE_LINK = "https://pay.wave.com/m/M_ci_vJLfXA_ztUwn/c/ci/?amount=1500";
+const ORANGE_LINK = "https://multi.app.orange-money.com/app/v1/kapptivate/qrcode/odyssee/?id=codgen101-958ef61950f34a1c87de49771bdcfd1e&v=1&amount=1500";
+const WHATSAPP_NUM = "2250718092496";
+const VIP_PRICE = 1500;
+const VIP_DURATION_DAYS = 60;
+
+let supabaseClient = null;
+try { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); console.log("✅ Supabase connecté"); } catch(e) { console.error(e); }
+
+let COUPON_CODE_1XBET = "";
+let COUPON_ODD_1XBET = null;
+let selectedDate = new Date();
+let isVipUser = false;
+let vipExpiry = null;
+
+function getDeviceId() {
+  let id = localStorage.getItem("kara_device_id");
+  if (!id) { id = "dev_" + Math.random().toString(36).substring(2) + Date.now(); localStorage.setItem("kara_device_id", id); }
+  return id;
+}
+const DEVICE_ID = getDeviceId();
+
+function goTo(page) {
+  const target = document.getElementById(page);
+  if (!target) return;
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  target.classList.add("active");
+  const backBtn = document.getElementById("backBtn");
+  if (page === "home") backBtn.classList.remove("visible");
+  else backBtn.classList.add("visible");
+  if (page === "vip") renderVipPage();
+  if (page === "matches") fetchMatchesByDate();
+  if (page === "coupons") fetchCoupon();
+  window.scrollTo(0, 0);
+}
+function goBack() { goTo("home"); }
+
+function copyPromoCode() {
+  navigator.clipboard.writeText("KARA23")
+    .then(() => showToast("✅ Code KARA23 copié !"))
+    .catch(() => showToast("Code : KARA23"));
+}
+
+function renderCalendar() {
+  const jours = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
+  const mois = ["JANV", "FÉVR", "MARS", "AVR", "MAI", "JUIN", "JUIL", "AOÛT", "SEPT", "OCT", "NOV", "DÉC"];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const html = [0, 1, 2].map(offset => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + offset);
+    const isToday = offset === 0;
+    const isActive = d.toDateString() === selectedDate.toDateString();
+    return `<div class="date-btn ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}" data-offset="${offset}">
+      <div class="day">${jours[d.getDay()]}</div>
+      <div class="num">${d.getDate()}</div>
+      <div class="month">${mois[d.getMonth()]}</div>
+    </div>`;
+  }).join("");
+  const el = document.getElementById("matchesCalendar");
+  if (el) el.innerHTML = html;
+  document.querySelectorAll(".date-btn").forEach(btn => {
+    btn.onclick = () => {
+      const offset = parseInt(btn.getAttribute("data-offset"), 10);
+      const d = new Date(today); d.setDate(today.getDate() + offset);
+      selectedDate = d; renderCalendar(); fetchMatchesByDate(); updateDateLabels();
+    };
+  });
+}
+function updateDateLabels() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((selectedDate - today) / (1000 * 60 * 60 * 24));
+  const label = diff === 0 ? "AUJOURD'HUI" : diff === 1 ? "DEMAIN" : "APRÈS-DEMAIN";
+  const matchLbl = document.getElementById("matchesDateLabel");
+  if (matchLbl) matchLbl.textContent = label;
+}
+
+function matchCard(m) {
+  const hLogo = m.homeLogo && m.homeLogo.startsWith("http") ? '<img src="' + m.homeLogo + '" onerror="this.parentNode.textContent=\'⚽\'">' : '⚽';
+  const aLogo = m.awayLogo && m.awayLogo.startsWith("http") ? '<img src="' + m.awayLogo + '" onerror="this.parentNode.textContent=\'⚽\'">' : '⚽';
+  const oddDisplay = m.odd ? m.odd : "-";
+  const oddClass = m.odd ? "odd" : "odd empty";
+  return '<div class="match-card">' +
+    '<div class="match-top"><div class="league">' + m.league + '</div><div>' + m.status + '</div></div>' +
+    '<div class="teams">' +
+      '<div class="team"><div class="team-logo">' + hLogo + '</div>' + m.home + '</div>' +
+      '<div class="time">' + m.time + '<small>COUP D\'ENVOI</small></div>' +
+      '<div class="team"><div class="team-logo">' + aLogo + '</div>' + m.away + '</div>' +
+    '</div>' +
+    '<div class="prediction">' +
+      '<div class="prediction-left"><small>PRONOSTIC KARA' + (m.confidence ? ' • ' + m.confidence + '%' : '') + '</small><strong>' + m.prediction + '</strong></div>' +
+      '<div class="' + oddClass + '">' + oddDisplay + '</div>' +
+    '</div>' +
+  '</div>';
+}
+function formatStatus(s) {
+  const map = { scheduled: "À venir", live: "En cours", finished: "Terminé", postponed: "Reporté" };
+  return map[s] || s || "À venir";
+}
+
+async function fetchMatchesByDate() {
+  if (!supabaseClient) return;
+  const dayStart = new Date(selectedDate); dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(selectedDate); dayEnd.setHours(23, 59, 59, 999);
+  const { data, error } = await supabaseClient.from("predictions")
+    .select(`prediction_value, prediction_type, confidence, odd,
+      match:matches (home_team, away_team, home_logo, away_logo, match_date, status,
+        championship:championships (name, flag_emoji))`)
+    .gte("match.match_date", dayStart.toISOString())
+    .lte("match.match_date", dayEnd.toISOString());
+  if (error) { renderMatches([]); return; }
+  const matches = data.filter(i => i.match).map(item => {
+    const matchDate = new Date(item.match.match_date);
+    return {
+      league: (item.match.championship ? (item.match.championship.flag_emoji || "🏆") + " " + item.match.championship.name : "🏆"),
+      status: formatStatus(item.match.status),
+      home: item.match.home_team, away: item.match.away_team,
+      homeLogo: item.match.home_logo, awayLogo: item.match.away_logo,
+      time: matchDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
+      prediction: item.prediction_value, odd: item.odd, confidence: item.confidence,
+      _rawDate: matchDate
+    };
+  }).sort((a, b) => a._rawDate - b._rawDate);
+  renderMatches(matches);
+}
+function renderMatches(list) {
+  const all = document.getElementById("allMatches");
+  if (!list || list.length === 0) { all.innerHTML = '<div class="empty"><div>📭</div><p>Aucun match pour cette date.</p></div>'; return; }
+  all.innerHTML = list.map(matchCard).join("");
+}
+
+async function fetchCouponCode() {
+  if (!supabaseClient) return;
+  const today = new Date().toISOString().split("T")[0];
+  try {
+    const { data } = await supabaseClient.from("coupons")
+      .select("coupon_code, total_odd")
+      .eq("coupon_date", today).order("id", { ascending: false }).limit(1).maybeSingle();
+    COUPON_CODE_1XBET = (data && data.coupon_code) ? data.coupon_code.trim() : "";
+    COUPON_ODD_1XBET = (data && data.total_odd) ? parseFloat(data.total_odd) : null;
+  } catch(e) { COUPON_CODE_1XBET = ""; COUPON_ODD_1XBET = null; }
+}
+
+async function fetchCoupon() {
+  if (!supabaseClient) return;
+  await fetchCouponCode();
+  const today = new Date(); const dayStart = new Date(today); dayStart.setHours(0,0,0,0);
+  const dayEnd = new Date(today); dayEnd.setHours(23,59,59,999);
+  const { data } = await supabaseClient.from("predictions")
+    .select(`prediction_value, odd, confidence, is_featured,
+      match:matches (home_team, away_team, match_date)`)
+    .gte("match.match_date", dayStart.toISOString())
+    .lte("match.match_date", dayEnd.toISOString())
+    .eq("is_featured", true);
+  const container = document.getElementById("couponsList");
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="empty"><div>📭</div><p>Aucun coupon pour aujourd\'hui.</p></div>';
+    return;
+  }
+  const items = '<div class="coupon-items-container">' +
+    data.filter(i => i.match).map(i =>
+      '<div class="coupon-item"><span>' + i.match.home_team + ' - ' + i.match.away_team + '</span>' +
+      '<span>' + i.prediction_value + (i.odd ? ' • ' + i.odd : '') + '</span></div>'
+    ).join("") + '</div>';
+  const calculated = data.reduce((sum, i) => sum * (parseFloat(i.odd) || 1), 1);
+  const totalOdd = COUPON_ODD_1XBET !== null ? COUPON_ODD_1XBET.toFixed(2) : calculated.toFixed(2);
+  let codeBlock;
+  if (COUPON_CODE_1XBET) {
+    codeBlock = '<div class="coupon-code-box"><small>CODE COUPON 1XBET</small><strong>' + COUPON_CODE_1XBET + '</strong><br><button class="copy-btn" onclick="copyCouponCode()">📋 Copier le code</button></div>';
+  } else {
+    codeBlock = '<div class="coupon-code-box"><small>CODE COUPON 1XBET</small><strong style="color:#8ea0b5;font-size:12px;letter-spacing:0">En cours de création...</strong></div>';
+  }
+  container.innerHTML = '<div class="coupon"><div class="coupon-head"><div class="coupon-title"><div class="coupon-icon">🔥</div><div><h3>Coupon du jour</h3><small>' + data.length + ' sélections</small></div></div><div class="cote">' + totalOdd + '</div></div>' + items + codeBlock + '</div>';
+}
+
+function copyCouponCode() {
+  if (!COUPON_CODE_1XBET) return;
+  navigator.clipboard.writeText(COUPON_CODE_1XBET)
+    .then(() => showToast("Code " + COUPON_CODE_1XBET + " copié ✓"))
+    .catch(() => showToast("Code : " + COUPON_CODE_1XBET));
+}
+
+async function checkVipStatus() {
+  if (!supabaseClient) return false;
+  try {
+    const { data } = await supabaseClient.from("subscriptions")
+      .select("end_date, active").eq("device_id", DEVICE_ID)
+      .order("id", { ascending: false }).limit(1).maybeSingle();
+    if (data && data.active) {
+      const endDate = new Date(data.end_date);
+      if (endDate > new Date()) { isVipUser = true; vipExpiry = endDate; return true; }
+      else { await supabaseClient.from("subscriptions").update({ active: false }).eq("device_id", DEVICE_ID); }
+    }
+    isVipUser = false; return false;
+  } catch(e) { isVipUser = false; return false; }
+}
+
+function renderVipPage() {
+  const container = document.getElementById("vipContent");
+
+  if (isVipUser && vipExpiry) {
+    const joursRestants = Math.ceil((vipExpiry - new Date()) / (1000 * 60 * 60 * 24));
+    container.innerHTML = `
+      <div class="vip-active">
+        <h2>✅ Vous êtes VIP !</h2>
+        <p>Accès premium actif</p>
+        <p style="margin-top:12px;font-size:16px;color:var(--gold);font-weight:900;">
+          Expire dans ${joursRestants} jour${joursRestants > 1 ? 's' : ''}
+        </p>
+      </div>
+      <div class="section">
+        <div class="section-title"><h2>🏆 Coupons VIP</h2><span>EXCLUSIF</span></div>
+        <div id="vipCoupons"><div class="loader"><span></span><br>Chargement...</div></div>
+      </div>
+    `;
+    loadVipCoupons();
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="vip-hero">
+      <h1>🏆 KARA VIP</h1>
+      <p>Suivez les 3 étapes ci-dessous pour activer votre VIP</p>
+    </div>
+
+    <div style="margin:0 18px 18px;padding:16px;background:linear-gradient(135deg,rgba(37,211,102,.15),rgba(32,229,138,.08));border:2px solid rgba(37,211,102,.5);border-radius:16px;text-align:center;">
+      <div style="font-size:16px;color:white;font-weight:900;line-height:1.5;margin-bottom:8px;">
+        📸 Envoie la capture du paiement
+      </div>
+      <div style="font-size:15px;color:white;font-weight:900;line-height:1.5;">
+        au WhatsApp ci-dessous
+      </div>
+      <div style="font-size:15px;color:var(--green);font-weight:900;line-height:1.5;margin-top:4px;">
+        pour obtenir ton code
+      </div>
+      <div style="font-size:13px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(37,211,102,.3);">
+        📞 +225 07 18 09 24 96
+      </div>
+    </div>
+
+    <div class="vip-price">
+      <div class="price">1 500 FCFA</div>
+      <div class="period">pour 2 mois d'accès VIP</div>
+    </div>
+
+    <div class="section" style="margin-top:20px;">
+      <div class="section-title">
+        <h2>🔑 1. Entrer votre code</h2>
+        <span>ÉTAPE FINALE</span>
+      </div>
+      <div style="background:var(--card);border:2px solid var(--green);border-radius:16px;padding:18px;margin-top:10px;">
+        <p style="color:var(--muted);font-size:12px;margin-bottom:12px;">
+          Après avoir payé et envoyé votre capture sur WhatsApp, entrez le code reçu ici :
+        </p>
+        <input type="text" id="activationCodeInput" placeholder="KARA-XXXXXX"
+               style="width:100%;padding:14px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:white;font-size:16px;font-weight:900;text-align:center;letter-spacing:2px;text-transform:uppercase;"
+               maxlength="11" />
+        <button onclick="activateVipCode()"
+                style="width:100%;padding:14px;border-radius:12px;background:var(--green);color:#04160e;font-weight:900;margin-top:12px;font-size:14px;">
+          🎫 Activer mon VIP
+        </button>
+        <div id="codeResult" style="margin-top:12px;text-align:center;font-size:13px;"></div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:20px;">
+      <div class="section-title">
+        <h2>💳 2. Payer 1 500 FCFA</h2>
+        <span>WAVE OU ORANGE</span>
+      </div>
+      <div style="margin-top:12px;">
+        <a href="${WAVE_LINK}" target="_blank" style="text-decoration:none;">
+          <div class="pay-option" style="border-color:rgba(32,229,138,.3);">
+            <div class="pay-logo" style="background:#00b3ff;color:white;font-size:14px;font-weight:900;">W</div>
+            <div class="pay-option-info"><strong>Payer avec Wave</strong><small>1 500 FCFA — 2 mois</small></div>
+            <div style="color:var(--green);font-size:20px;">→</div>
+          </div>
+        </a>
+        <a href="${ORANGE_LINK}" target="_blank" style="text-decoration:none;">
+          <div class="pay-option" style="border-color:rgba(255,102,0,.3);">
+            <div class="pay-logo" style="background:#ff6600;color:white;font-size:12px;font-weight:900;">OM</div>
+            <div class="pay-option-info"><strong>Payer avec Orange Money</strong><small>1 500 FCFA — 2 mois</small></div>
+            <div style="color:#ff6600;font-size:20px;">→</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:20px;">
+      <div class="section-title">
+        <h2>📱 3. Envoyer la capture</h2>
+        <span>APRÈS PAIEMENT</span>
+      </div>
+      
+      <div style="background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.3);border-radius:16px;padding:18px;margin-top:12px;">
+        
+        <div style="background:rgba(37,211,102,.15);border:2px solid rgba(37,211,102,.5);border-radius:14px;padding:16px;margin-bottom:16px;text-align:center;">
+          <div style="font-size:15px;color:white;font-weight:900;line-height:1.6;">
+            📸 Envoie la capture du paiement au WhatsApp ci-dessous pour obtenir ton code
+          </div>
+        </div>
+
+        <a href="https://wa.me/${WHATSAPP_NUM}?text=Bonjour%2C%20je%20viens%20de%20payer%20l'abonnement%20VIP%20KARA%20(1500%20FCFA).%20Voici%20ma%20capture%20%3A"
+           target="_blank" style="text-decoration:none;">
+          <div class="pay-option" style="border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.15);">
+            <div class="pay-logo" style="background:#25D366;color:white;font-size:20px;">📱</div>
+            <div class="pay-option-info">
+              <strong>Envoyer capture WhatsApp</strong>
+              <small>+225 07 18 09 24 96</small>
+            </div>
+            <div style="color:#25D366;font-size:20px;">→</div>
+          </div>
+        </a>
+        
+        <div style="text-align:center;color:var(--muted);font-size:11px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(37,211,102,.2);">
+          📋 Après réception, vous recevrez votre code<br>
+          🔑 Entrez-le dans <strong>l'étape 1</strong> ci-dessus
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function activateVipCode() {
+  const input = document.getElementById("activationCodeInput");
+  const result = document.getElementById("codeResult");
+  const code = input.value.trim().toUpperCase();
+  if (!code) { result.style.color = "var(--red)"; result.textContent = "❌ Entre un code"; return; }
+  result.style.color = "var(--muted)"; result.textContent = "⏳ Vérification...";
+  try {
+    const { data: codeData, error: codeError } = await supabaseClient.from("activation_codes")
+      .select("id, code, used, duration_days").eq("code", code).maybeSingle();
+    if (codeError || !codeData) { result.style.color = "var(--red)"; result.textContent = "❌ Code invalide"; return; }
+    if (codeData.used) { result.style.color = "var(--red)"; result.textContent = "❌ Ce code a déjà été utilisé"; return; }
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + (codeData.duration_days || VIP_DURATION_DAYS));
+    const { error: subError } = await supabaseClient.from("subscriptions").insert({
+      device_id: DEVICE_ID, start_date: new Date().toISOString(),
+      end_date: endDate.toISOString(), amount: VIP_PRICE,
+      payment_ref: "CODE-" + code, active: true
+    });
+    if (subError) { result.style.color = "var(--red)"; result.textContent = "❌ Erreur : " + subError.message; return; }
+    await supabaseClient.from("activation_codes").update({
+      used: true, used_by_device: DEVICE_ID, used_at: new Date().toISOString()
+    }).eq("id", codeData.id);
+    result.style.color = "var(--green)"; result.textContent = "✅ VIP activé pour 2 mois !";
+    showToast("🎉 Bienvenue chez les VIP !");
+    setTimeout(async () => { await checkVipStatus(); renderVipPage(); }, 1500);
+  } catch(e) { result.style.color = "var(--red)"; result.textContent = "❌ Erreur de connexion"; }
+}
+
+async function loadVipCoupons() {
+  const container = document.getElementById("vipCoupons");
+  const today = new Date(); const dayStart = new Date(today); dayStart.setHours(0,0,0,0);
+  const dayEnd = new Date(today); dayEnd.setHours(23,59,59,999);
+
+  const { data } = await supabaseClient.from("predictions")
+    .select(`prediction_value, odd, confidence,
+      match:matches (home_team, away_team, match_date)`)
+    .gte("match.match_date", dayStart.toISOString())
+    .lte("match.match_date", dayEnd.toISOString())
+    .eq("prediction_type", "VIP");
+
+  let vipCode = "";
+  let vipOdd = null;
+  try {
+    const todayStr = new Date().toISOString().split("T")[0];
+    const { data: couponData } = await supabaseClient.from("coupons")
+      .select("vip_coupon_code, vip_total_odd")
+      .eq("coupon_date", todayStr)
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (couponData) {
+      vipCode = (couponData.vip_coupon_code || "").trim();
+      vipOdd = couponData.vip_total_odd ? parseFloat(couponData.vip_total_odd) : null;
+    }
+  } catch(e) { console.error(e); }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="empty"><div>🏆</div><p>Coupons VIP en préparation...</p></div>';
+    return;
+  }
+
+  const items = '<div class="coupon-items-container">' +
+    data.filter(i => i.match).map(i =>
+      '<div class="coupon-item"><span>' + i.match.home_team + ' - ' + i.match.away_team + '</span>' +
+      '<span>' + i.prediction_value + (i.odd ? ' • ' + i.odd : '') + '</span></div>'
+    ).join("") + '</div>';
+
+  const calculated = data.reduce((sum, i) => sum * (parseFloat(i.odd) || 1), 1);
+  const totalOdd = vipOdd !== null ? vipOdd.toFixed(2) : calculated.toFixed(2);
+
+  let codeBlock;
+  if (vipCode) {
+    codeBlock = '<div class="coupon-code-box"><small>CODE COUPON VIP 1XBET</small><strong>' + vipCode + '</strong><br><button class="copy-btn" onclick="copyVipCode()">📋 Copier le code VIP</button></div>';
+  } else {
+    codeBlock = '<div class="coupon-code-box"><small>CODE COUPON VIP 1XBET</small><strong style="color:#8ea0b5;font-size:12px;letter-spacing:0">En cours de création...</strong></div>';
+  }
+
+  container.innerHTML = '<div class="coupon"><div class="coupon-head"><div class="coupon-title"><div class="coupon-icon">🏆</div><div><h3>Coupon VIP</h3><small>' + data.length + ' sélections</small></div></div><div class="cote">' + totalOdd + '</div></div>' + items + codeBlock + '</div>';
+}
+
+function copyVipCode() {
+  const code = document.querySelector('#vipCoupons .coupon-code-box strong')?.textContent;
+  if (!code) return;
+  navigator.clipboard.writeText(code)
+    .then(() => showToast("✅ Code VIP " + code + " copié !"))
+    .catch(() => showToast("Code VIP : " + code));
+}
+
+function openNotifPanel() { document.getElementById("notifModal").classList.add("active"); refreshNotifSwitches(); }
+function closeNotifPanel() { document.getElementById("notifModal").classList.remove("active"); }
+function refreshNotifSwitches() {
+  const freeOn = localStorage.getItem("kara_notif_free") === "true";
+  const vipOn = localStorage.getItem("kara_notif_vip") === "true";
+  document.getElementById("switchFree").className = "switch" + (freeOn ? " on" : "");
+  document.getElementById("switchVip").className = "switch" + (vipOn ? " on" : "");
+}
+async function toggleNotif(type) {
+  const key = "kara_notif_" + type;
+  const current = localStorage.getItem(key) === "true";
+  const newValue = !current;
+  if (newValue) {
+    if ('Notification' in window) {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') { showToast("❌ Notifications refusées"); return; }
+    }
+    if (type === 'vip' && !isVipUser) { showToast("🏆 Abonnement VIP requis"); return; }
+  }
+  localStorage.setItem(key, newValue);
+  refreshNotifSwitches(); updateBellIcon();
+  if (supabaseClient) {
+    await supabaseClient.from("notification_tokens").upsert({
+      device_id: DEVICE_ID,
+      want_free: type === 'free' ? newValue : (localStorage.getItem("kara_notif_free") === "true"),
+      want_vip: type === 'vip' ? newValue : (localStorage.getItem("kara_notif_vip") === "true")
+    }, { onConflict: "device_id" });
+  }
+  showToast(newValue ? "🔔 Notifications activées" : "🔕 Notifications désactivées");
+}
+function updateBellIcon() {
+  const bell = document.getElementById("bellBtn");
+  const freeOn = localStorage.getItem("kara_notif_free") === "true";
+  const vipOn = localStorage.getItem("kara_notif_vip") === "true";
+  if (freeOn || vipOn) bell.classList.add("on");
+  else bell.classList.remove("on");
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+function checkDateChange() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const currentDate = today.toDateString();
+  if (window._lastDate !== currentDate) {
+    window._lastDate = currentDate;
+    selectedDate = new Date(); selectedDate.setHours(0,0,0,0);
+    renderCalendar(); updateDateLabels();
+    fetchMatchesByDate(); fetchCoupon();
+  }
+}
+function scheduleMidnightUpdate() {
+  const now = new Date(); const midnight = new Date(now); midnight.setHours(24,0,0,0);
+  setTimeout(() => { checkDateChange(); scheduleMidnightUpdate(); }, midnight - now);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
+}
+
+(async function init() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  selectedDate = now;
+  window._lastDate = now.toDateString();
+  await checkVipStatus();
+  updateBellIcon();
+  renderCalendar();
+  updateDateLabels();
+  scheduleMidnightUpdate();
+})();
+
+setInterval(checkDateChange, 60 * 1000);
+console.log("✅ KARA PRONOS chargé — Device:", DEVICE_ID);
+</script>
+</body>
+</html>
