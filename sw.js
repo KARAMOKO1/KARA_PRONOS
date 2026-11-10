@@ -6,7 +6,7 @@
    - Support notifications push
 ═══════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'kara-pronos-v37';
+const CACHE_NAME = 'kara-pronos-v38';
 const STATIC_ASSETS = ['/', '/index.html', '/manifest.json'];
 
 /* ─── INSTALL ─── */
