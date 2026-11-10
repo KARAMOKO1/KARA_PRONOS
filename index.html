@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#050a12">
+<title>KARA PRONOS</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="https://karapronos.website/icon-512.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KARA">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#050a12;--card:rgba(20,30,45,0.6);--card-border:rgba(255,255,255,0.08);
+  --green:#20e58a;--white:#ffffff;--muted:#8ea0b5;
+  --red:#ff5364;--gold:#ffc857;
+  --xbet-blue:#0057A4;--xbet-yellow:#FFD100;
+  --betclic-navy:#0E1B3D;--betclic-orange:#FF6B35;
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--white);
+  min-height:100vh;padding-bottom:85px;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 50% 0%, rgba(32,229,138,0.05) 0%, transparent 60%);
+}
+button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit;}
+a{text-decoration:none;color:inherit;}
+
+.app{max-width:700px;margin:auto;position:relative;}
+
+/* HEADER */
+.header{padding:24px 20px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:linear-gradient(to bottom, var(--bg) 60%, transparent);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green),#0eb56b);display:flex;align-items:center;justify-content:center;color:#04120d;font-size:20px;font-weight:900;box-shadow:0 4px 15px rgba(32,229,138,0.3);}
+.logo-text{font-size:18px;font-weight:900;letter-spacing:-0.5px;}
+.logo-text span{color:var(--green);}
+.bell{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;font-size:16px;position:relative;}
+
+/* PAGES & BENTO GRID */
+.page{display:none;animation:fadeIn .3s ease-out;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.bento-grid{padding:15px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.bento-result{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--card-border);border-radius:24px;padding:20px;position:relative;overflow:hidden;transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);display:flex;flex-direction:column;justify-content:center;cursor:pointer;min-height:100px;}
+.bento-result:active{transform:scale(0.96);}
+.span-2{grid-column:span 2;min-height:110px;}
+.span-1{grid-column:span 1;min-height:130px;}
+
+/* Carte Réclamation Spéciale */
+.bento-claim {
+  background: linear-gradient(135deg, rgba(32,229,138,0.15), rgba(74,158,255,0.15)) !important;
+  border: 1px solid rgba(32,229,138,0.4) !important;
+  justify-content: space-between;
+}
+.bento-claim .bento-title { color: var(--white); }
+.bento-claim .bento-desc { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.4; }
+
+.card-betclic{border-top:2px solid var(--betclic-orange);}
+.card-vip{border-top:2px solid var(--gold);}
+.bento-header{display:flex;align-items:center;gap:10px;}
+.bento-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;}
+.icon-xbet{background:linear-gradient(135deg,var(--xbet-blue),#003C7D);color:var(--xbet-yellow);font-size:10px;}
+.icon-betclic{background:linear-gradient(135deg,var(--betclic-navy),#1a2a52);color:var(--betclic-orange);font-size:9px;}
+.icon-vip{background:linear-gradient(135deg,#ffd700,#ff9f1c);color:#0a1626;font-size:16px;}
+.icon-claim{background:linear-gradient(135deg,#20e58a,#0eb56b);color:#04120d;font-size:16px;}
+
+.bento-title{font-size:16px;font-weight:900;}
+.bento-arrow{position:absolute;bottom:20px;right:20px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;transition:0.2s;}
+.bento-result:active .bento-arrow{background:rgba(255,255,255,0.2);transform:translateX(3px);}
+.bento-promo{grid-column:span 2;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg, #ffc857, #ff9f1c);color:#0a1626;padding:16px 20px;border-radius:20px;cursor:pointer;box-shadow:0 8px 25px rgba(255,200,87,0.2);}
+.bento-promo-text small{font-size:10px;font-weight:800;opacity:0.8;display:block;margin-bottom:2px;}
+.bento-promo-text strong{font-size:15px;font-weight:900;}
+.promo-code{background:#0a1626;color:#ffc857;padding:6px 12px;border-radius:8px;font-size:14px;font-weight:900;letter-spacing:1px;}
+
+/* COUPONS (Pages Intérieures) */
+.section{padding:10px 20px 20px;}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.section-title h2{font-size:22px;font-weight:900;letter-spacing:-0.5px;}
+.section-title span{color:var(--green);font-size:10px;font-weight:900;letter-spacing:1px;background:rgba(32,229,138,0.1);padding:4px 8px;border-radius:6px;}
+.coupon{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--card-border);border-radius:24px;padding:20px;margin-bottom:20px;animation:fadeIn 0.4s ease-out;}
+.coupon-xbet{border-top:3px solid #4a9eff;}
+.coupon-betclic{border-top:3px solid var(--betclic-orange);}
+.coupon-vip{border-top:3px solid var(--gold);}
+
+/* STATUT DU COUPON (Gagné, Perdu, En cours) */
+.status-banner {
+  padding: 14px; border-radius: 14px; text-align: center; font-weight: 900; font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.status-won { background: rgba(32,229,138,0.15); border: 1px solid var(--green); color: var(--green); }
+.status-lost { background: rgba(255,83,100,0.15); border: 1px solid var(--red); color: var(--red); }
+.status-pending { background: rgba(255,255,255,0.05); border: 1px solid var(--muted); color: var(--muted); }
+
+.coupon-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.coupon-title{display:flex;gap:12px;align-items:center;}
+.coupon-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;}
+.coupon h3{font-size:16px;font-weight:900;}
+.coupon small{color:var(--muted);font-size:11px;}
+.cote{color:var(--white);font-weight:900;font-size:18px;background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);}
+.coupon-items-container{max-height:500px;overflow-y:auto;padding-right:4px;margin-bottom:15px;}
+.coupon-items-container::-webkit-scrollbar{width:3px;}
+.coupon-items-container::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:3px;}
+.coupon-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.coupon-item:last-child{border-bottom:none;}
+.coupon-item-teams{font-size:13px;font-weight:700;flex:1;padding-right:10px;}
+.coupon-item-prono{font-size:12px;color:var(--green);font-weight:800;background:rgba(32,229,138,0.1);padding:4px 8px;border-radius:6px;white-space:nowrap;}
+.coupon-code-box{padding:16px;border-radius:16px;text-align:center;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.2);}
+.coupon-code-box small{color:var(--muted);font-size:10px;display:block;margin-bottom:8px;font-weight:900;letter-spacing:1px;}
+.coupon-code-box strong{color:var(--gold);font-size:22px;letter-spacing:3px;display:block;margin-bottom:12px;}
+.copy-btn{width:100%;padding:14px;border-radius:12px;background:var(--white);color:var(--bg);font-weight:900;font-size:14px;transition:0.2s;}
+.copy-btn:active{transform:scale(0.97);}
+.btn-betclic{display:block;width:100%;padding:16px;border-radius:16px;background:linear-gradient(135deg,var(--betclic-navy),#1a2a52);color:var(--betclic-orange);border:1px solid var(--betclic-orange);font-weight:900;font-size:14px;text-align:center;transition:0.2s;}
+
+/* BOTTOM NAVIGATION */
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;z-index:1000;background:rgba(5,10,18,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--card-border);display:flex;justify-content:space-around;align-items:center;padding:12px 10px 20px;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:700;transition:0.2s;}
+.nav-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:20px;transition:0.2s;filter:grayscale(100%) opacity(0.6);}
+.nav-item.active{color:var(--green);}
+.nav-item.active .nav-icon{filter:grayscale(0%) opacity(1);transform:translateY(-2px);}
+
+/* VIP SECTION */
+.vip-hero{margin:10px 20px 20px;padding:30px 20px;border-radius:24px;background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(20,30,45,0.8));border:1px solid rgba(255,200,87,0.3);text-align:center;}
+.vip-hero h1{font-size:24px;font-weight:900;color:var(--gold);margin-bottom:8px;}
+.vip-price{margin:0 20px 20px;text-align:center;padding:24px;background:var(--card);border-radius:24px;border:1px solid var(--card-border);}
+.vip-price .price{font-size:36px;font-weight:900;color:var(--gold);}
+.pay-option{display:flex;align-items:center;gap:14px;padding:16px;background:var(--card);border:1px solid var(--card-border);border-radius:16px;margin-bottom:12px;}
+.pay-logo{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;}
+.pay-option-info strong{font-size:14px;display:block;}
+.pay-option-info small{color:var(--muted);font-size:12px;}
+
+/* BLOC EXPLICATIF */
+.info-box {background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.3); border-radius: 16px; padding: 16px; margin-bottom: 20px; font-size: 13px; color: var(--white); line-height: 1.5;}
+.info-box b { color: #4a9eff; }
+
+/* MODAL & DIVERS */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(5px);display:none;z-index:10000;align-items:center;justify-content:center;padding:20px;}
+.modal.active{display:flex;}
+.modal-content{background:#0d151f;border-radius:24px;padding:24px;width:100%;max-width:400px;border:1px solid var(--card-border);}
+.form-input{width:100%;padding:14px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid var(--card-border);color:white;font-size:14px;font-weight:700;margin-bottom:12px;text-align:center;}
+.notif-toggle{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.notif-toggle:last-of-type{border-bottom:none;}
+.switch{position:relative;width:46px;height:26px;background:rgba(255,255,255,0.1);border-radius:13px;transition:0.2s;}
+.switch.on{background:var(--green);}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:white;border-radius:50%;transition:0.2s;}
+.switch.on::after{left:23px;}
+.loader{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+.spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,0.1);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:var(--white);color:var(--bg);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;opacity:0;pointer-events:none;transition:0.3s;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,0.5);white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">KARA<span>.</span></div>
+    </div>
+    <button class="bell" id="bellBtn" onclick="openNotifPanel()">🔔</button>
+  </header>
+
+  <!-- PAGE ACCUEIL (BENTO GRID PROPRE) -->
+  <main id="page-home" class="page active">
+    <div class="bento-grid" style="padding-bottom:0;">
+      <div class="bento-promo" onclick="copyPromoCode()">
+        <div class="bento-promo-text">
+          <small>CODE PROMO 1XBET</small>
+          <strong>Inscris-toi et profite</strong>
+        </div>
+        <div class="promo-code">KARA23 📋</div>
+      </div>
+
+      <!-- CARTE RÉCLAMATION -->
+      <div class="bento-result span-2 bento-claim" onclick="openClaimModal()">
+        <div>
+          <div class="bento-header">
+            <div class="bento-icon icon-claim">🎁</div>
+            <div class="bento-title">Gagne 1 Mois VIP Offert</div>
+          </div>
+          <div class="bento-desc">Inscris-toi sur 1xBet avec le code KARA23, fais un dépôt de 2000 FCFA min. et réclame ton dû.</div>
+        </div>
+        <div class="bento-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- GRILLE DES RÉSULTATS (SANS TEXTE) -->
+    <div class="bento-grid" id="homeResultsGrid"></div>
+  </main>
+
+  <!-- PAGE 1XBET -->
+  <main id="page-xbet" class="page">
+    <div class="section">
+      <div class="section-title"><h2 style="color:#4a9eff;">Coupon 1xBet</h2><span>GRATUIT</span></div>
+      <div id="xbetContent"></div>
+    </div>
+  </main>
+
+  <!-- PAGE BETCLIC -->
+  <main id="page-betclic" class="page">
+    <div class="section">
+      <div class="section-title"><h2 style="color:var(--betclic-orange);">Coupon Betclic</h2><span>EXCLUSIF</span></div>
+      <div id="betclicContent"></div>
+    </div>
+  </main>
+
+  <!-- PAGE VIP -->
+  <main id="page-vip" class="page">
+    <div id="vipContent"></div>
+  </main>
+</div>
+
+<!-- NAV BAR -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="goTo('home')"><div class="nav-icon">🏠</div><span>Accueil</span></div>
+  <div class="nav-item" id="nav-xbet" onclick="goTo('xbet')"><div class="nav-icon">⚽</div><span>1xBet</span></div>
+  <div class="nav-item" id="nav-betclic" onclick="goTo('betclic')"><div class="nav-icon">🎯</div><span>Betclic</span></div>
+  <div class="nav-item" id="nav-vip" onclick="goTo('vip')"><div class="nav-icon">🏆</div><span>VIP</span></div>
+</nav>
+
+<!-- MODAL NOTIFICATIONS -->
+<div class="modal" id="notifModal">
+  <div class="modal-content">
+    <h3 style="font-size:18px;margin-bottom:16px;">🔔 Notifications</h3>
+    <div class="notif-toggle">
+      <div><strong style="font-size:14px;">Coupon 1xBet</strong><div style="color:var(--muted);font-size:11px;">Alertes gratuites</div></div>
+      <div class="switch" id="switchFree" onclick="toggleNotif('free')"></div>
+    </div>
+    <div class="notif-toggle">
+      <div><strong style="font-size:14px;">Coupon Betclic</strong><div style="color:var(--muted);font-size:11px;">Alertes Betclic</div></div>
+      <div class="switch" id="switchBetclic" onclick="toggleNotif('betclic')"></div>
+    </div>
+    <div class="notif-toggle">
+      <div><strong style="font-size:14px;">Coupons VIP 🏆</strong><div style="color:var(--muted);font-size:11px;">Réservé aux VIP</div></div>
+      <div class="switch" id="switchVip" onclick="toggleNotif('vip')"></div>
+    </div>
+    <button style="width:100%;padding:14px;border-radius:12px;background:var(--green);color:#04160e;font-weight:900;margin-top:16px;font-size:14px;" onclick="closeNotifPanel()">Fermer</button>
+  </div>
+</div>
+
+<!-- MODAL RÉCLAMATION VIP -->
+<div class="modal" id="claimModal">
+  <div class="modal-content">
+    <h3 style="font-size:18px;margin-bottom:8px;text-align:center;color:#4a9eff;">🎁 Réclamer mon VIP</h3>
+    
+    <div class="info-box">
+      <b>Comment ça marche ?</b><br>
+      1. Inscris-toi sur 1xBet avec le code <b>KARA23</b>.<br>
+      2. Fais un premier dépôt de <b>2000 FCFA</b> minimum.<br>
+      3. Entre ton <b>ID 1xBet</b> ci-dessous pour valider ton mois VIP.<br>
+      <i>(Ton ID se trouve dans ton profil 1xBet).</i>
+    </div>
+
+    <input type="text" id="claimId1xbet" class="form-input" placeholder="Ton ID 1xBet (ex: 123456789)" required>
+    <button onclick="submitClaim()" style="width:100%;padding:14px;border-radius:12px;background:#4a9eff;color:white;font-weight:900;font-size:14px;">Envoyer ma demande</button>
+    <div id="claimResult" style="margin-top:12px;text-align:center;font-size:12px;"></div>
+    <button onclick="closeClaimModal()" style="width:100%;padding:12px;margin-top:12px;color:var(--muted);font-size:13px;font-weight:700;">Annuler</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://mdsjhcebhzvcdmgzrltw.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_tWs_vtWAyUKjX737dOn37Q_FWOvpGsR";
+const WAVE_LINK = "https://pay.wave.com/m/M_ci_vJLfXA_ztUwn/c/ci/?amount=2000";
+const ORANGE_LINK = "https://multi.app.orange-money.com/app/v1/kapptivate/qrcode/odyssee/?id=codgen101-958ef61950f34a1c87de49771bdcfd1e&v=1&amount=2000";
+const WHATSAPP_NUM = "2250718092496";
+const VIP_PRICE = 2000; 
+const VIP_DURATION_DAYS = 30; 
+const COUPON_LIFESPAN_DAYS = 7;
+
+let supabaseClient = null;
+try { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) { console.error(e); }
+
+let isVipUser = false;
+let vipExpiry = null;
+
+function getDeviceId() {
+  let id = localStorage.getItem("kara_device_id");
+  if (!id) { id = "dev_" + Math.random().toString(36).substring(2) + Date.now(); localStorage.setItem("kara_device_id", id); }
+  return id;
+}
+const DEVICE_ID = getDeviceId();
+
+function goTo(pageName) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + pageName).classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("nav-" + pageName).classList.add("active");
+
+  if (pageName === "home") renderHomeResults();
+  if (pageName === "vip") renderVipPage();
+  if (pageName === "xbet") loadCoupon("xbet");
+  if (pageName === "betclic") loadCoupon("betclic");
+  window.scrollTo(0, 0);
+}
+
+function copyPromoCode() {
+  navigator.clipboard.writeText("KARA23")
+    .then(() => showToast("Code KARA23 copié ✓"))
+    .catch(() => showToast("Code : KARA23"));
+}
+
+/* ═══════════════════════════════════════════════════
+   LOGIQUE ACCUEIL (CARTES ÉPURÉES)
+═══════════════════════════════════════════════════ */
+async function renderHomeResults() {
+  const grid = document.getElementById("homeResultsGrid");
+  
+  const createCard = (type, title, iconClass, iconText, isSpan2) => {
+    const spanClass = isSpan2 ? "span-2" : "span-1";
+    const cardColorClass = type === 'betclic' ? 'card-betclic' : (type === 'vip' ? 'card-vip' : '');
+    return `
+      <div class="bento-result ${spanClass} ${cardColorClass}" onclick="goTo('${type}')">
+        <div class="bento-header">
+          <div class="bento-icon ${iconClass}">${iconText}</div>
+          <div class="bento-title">${title}</div>
+        </div>
+        <div class="bento-arrow">→</div>
+      </div>
+    `;
+  };
+
+  grid.innerHTML = 
+    createCard('xbet', 'Coupon 1xBet', 'icon-xbet', '1XBET', true) +
+    createCard('betclic', 'Betclic', 'icon-betclic', 'BETCLIC', false) +
+    createCard('vip', 'KARA VIP', 'icon-vip', '🏆', false);
+}
+
+async function fetchLatestCoupon() {
+  const { data, error } = await supabaseClient.from("coupons").select("*").order("coupon_date", { ascending: false }).order("id", { ascending: false }).limit(1);
+  if (error || !data || data.length === 0) return null;
+  const c = data[0];
+  const limitDate = new Date(); limitDate.setDate(limitDate.getDate() - COUPON_LIFESPAN_DAYS);
+  return new Date(c.coupon_date) < limitDate ? null : c;
+}
+
+function filterItems(predictions) { return predictions.filter(p => p.hidden !== true && p.match).sort((a, b) => new Date(a.match.match_date) - new Date(b.match.match_date)); }
+function couponItemHTML(item) { return `<div class="coupon-item"><div class="coupon-item-teams">${item.match.home_team} <span style="color:var(--muted);font-size:11px;">vs</span> ${item.match.away_team}</div><div class="coupon-item-prono">${item.prediction_value} • ${item.odd || '-'}</div></div>`; }
+
+// Générateur de bandeau de statut
+function statusBannerHTML(outcome) {
+  if (outcome === "won") return `<div class="status-banner status-won">🏆 GAGNÉ</div>`;
+  if (outcome === "lost") return `<div class="status-banner status-lost">❌ PERDU</div>`;
+  return `<div class="status-banner status-pending">⏳ EN COURS</div>`;
+}
+
+async function fetchPredictions(field) {
+  let result = await supabaseClient.from("predictions").select(`id, prediction_value, odd, hidden, match:matches (home_team, away_team, match_date)`).eq(field, true);
+  if (result.error) result = await supabaseClient.from("predictions").select(`id, prediction_value, odd, match:matches (home_team, away_team, match_date)`).eq(field, true);
+  return result.error ? { predictions: [], error: result.error } : { predictions: result.data || [], error: null };
+}
+
+/* ═══════════════════════════════════════════════════
+   PAGE 1XBET / BETCLIC (AVEC STATUT)
+═══════════════════════════════════════════════════ */
+async function loadCoupon(type) {
+  const container = document.getElementById(type + "Content");
+  container.innerHTML = '<div class="loader"><div class="spinner"></div>Chargement...</div>';
+  const field = type === "xbet" ? "is_featured" : "is_betclic";
+  
+  try {
+    const { predictions, error } = await fetchPredictions(field);
+    if (error) throw error;
+    const items = filterItems(predictions);
+    const c = await fetchLatestCoupon();
+
+    // Si pas de coupon ou pas de matchs
+    if (items.length === 0 || !c) { 
+      container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p style="font-size:18px;font-weight:900;color:var(--muted);">Pas de coupon actif</p></div>'; 
+      return; 
+    }
+
+    let code = "", odd = null, betclicLink = "", outcome = null;
+    if (type === "xbet") { code = c.coupon_code || ""; odd = c.total_odd; outcome = c.outcome; }
+    else { betclicLink = c.betclic_link || ""; odd = c.betclic_total_odd; outcome = c.outcome; }
+
+    const totalOdd = odd ? parseFloat(odd).toFixed(2) : "—";
+    let actionBlock = type === "betclic"
+      ? (betclicLink ? `<a href="${betclicLink}" target="_blank" class="btn-betclic">🎯 PARIER SUR BETCLIC →</a>` : `<div class="coupon-code-box"><small>LIEN BETCLIC</small><strong style="color:#8ea0b5;font-size:12px;letter-spacing:0">En cours de création...</strong></div>`)
+      : (code ? `<div class="coupon-code-box"><small>CODE 1XBET</small><strong>${code}</strong><button class="copy-btn" onclick="copyCode('${code}')">📋 Copier le code</button></div>` : `<div class="coupon-code-box"><small>CODE</small><strong style="color:#8ea0b5;font-size:12px;letter-spacing:0">En cours de création...</strong></div>`);
+
+    container.innerHTML = `
+      <div class="coupon coupon-${type}">
+        <div class="coupon-head">
+          <div class="coupon-title"><div class="coupon-icon icon-${type === 'xbet' ? 'xbet' : 'betclic'}">${type === 'xbet' ? '1XBET' : 'BETCLIC'}</div><div><h3>Coupon ${type === 'xbet' ? '1xBet' : 'Betclic'}</h3><small>${items.length} sélections</small></div></div>
+          <div class="cote">${totalOdd}</div>
+        </div>
+        
+        <!-- BANNIÈRE STATUT ICI -->
+        ${statusBannerHTML(outcome)}
+
+        <div class="coupon-items-container">${items.map(couponItemHTML).join("")}</div>
+        ${actionBlock}
+      </div>`;
+  } catch (e) { 
+    container.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>Erreur de connexion</p></div>'; 
+  }
+}
+
+function copyCode(code) { navigator.clipboard.writeText(code).then(() => showToast("Code " + code + " copié ✓")).catch(() => showToast("Code : " + code)); }
+
+async function checkVipStatus() {
+  if (!supabaseClient) return false;
+  try {
+    const { data } = await supabaseClient.from("subscriptions").select("end_date, active").eq("device_id", DEVICE_ID).order("id", { ascending: false }).limit(1).maybeSingle();
+    if (data && data.active && new Date(data.end_date) > new Date()) { isVipUser = true; vipExpiry = new Date(data.end_date); return true; }
+    isVipUser = false; return false;
+  } catch(e) { return false; }
+}
+
+async function renderVipPage() {
+  const container = document.getElementById("vipContent");
+  
+  if (isVipUser && vipExpiry) {
+    const jours = Math.ceil((vipExpiry - new Date()) / (1000 * 60 * 60 * 24));
+    container.innerHTML = `
+      <div class="vip-hero" style="margin-top:20px;"><h1>✅ VOUS ÊTES VIP</h1><p style="color:var(--muted);font-size:13px;margin-top:8px;">Expire dans ${jours} jours</p></div>
+      <div class="section"><div class="section-title"><h2 style="color:var(--gold);">🏆 Coupon VIP</h2><span>EXCLUSIF</span></div><div id="vipCouponContent"></div></div>`;
+    loadVipCoupon();
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="vip-hero">
+      <h1>🏆 KARA VIP</h1>
+      <p style="color:var(--muted);font-size:13px;margin-top:8px;">Accès premium exclusif</p>
+    </div>
+    <div class="vip-price">
+      <div class="price">2 000 FCFA</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:4px;">par mois</div>
+    </div>
+
+    <div class="section">
+      <div class="info-box">
+        <b>🎁 Offre Spéciale 1xBet</b><br>
+        Inscris-toi sur 1xBet avec le code <b>KARA23</b> et fais un premier dépôt de <b>2 000 FCFA</b> minimum. Ensuite, clique sur "Gagne 1 Mois VIP Offert" sur l'accueil et entre ton ID 1xBet pour recevoir <b>1 mois VIP offert</b> !
+      </div>
+
+      <div class="section-title"><h2>🔑 Déjà un code VIP ?</h2></div>
+      <div style="background:var(--card);border:1px solid var(--gold);border-radius:20px;padding:20px;margin-bottom:20px;">
+        <input type="text" id="activationCodeInput" placeholder="CODE D'ACTIVATION" style="width:100%;padding:14px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid var(--card-border);color:white;font-size:14px;font-weight:900;text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;" maxlength="11" />
+        <button onclick="activateVipCode()" style="width:100%;padding:14px;border-radius:12px;background:var(--gold);color:#0a1626;font-weight:900;font-size:14px;">🎫 Valider le code</button>
+        <div id="codeResult" style="margin-top:12px;text-align:center;font-size:13px;"></div>
+      </div>
+
+      <div class="section-title"><h2>💳 Paiement classique</h2></div>
+      <a href="${WAVE_LINK}" target="_blank"><div class="pay-option"><div class="pay-logo" style="background:#00b3ff;color:white;">W</div><div class="pay-option-info"><strong>Wave</strong><small>2 000 FCFA / mois</small></div><div style="color:var(--green);font-size:18px;">→</div></div></a>
+      <a href="${ORANGE_LINK}" target="_blank"><div class="pay-option"><div class="pay-logo" style="background:#ff6600;color:white;">OM</div><div class="pay-option-info"><strong>Orange Money</strong><small>2 000 FCFA / mois</small></div><div style="color:#ff6600;font-size:18px;">→</div></div></a>
+      
+      <div class="section-title" style="margin-top:20px;"><h2>📱 Envoie la capture</h2></div>
+      <a href="https://wa.me/${WHATSAPP_NUM}?text=Bonjour%2C%20je%20viens%20de%20payer%20l'abonnement%20VIP%20KARA%20(2000%20FCFA)." target="_blank">
+        <div class="pay-option" style="border-color:rgba(37,211,102,0.5);background:rgba(37,211,102,0.1);">
+          <div class="pay-logo" style="background:#25D366;color:white;">📱</div>
+          <div class="pay-option-info"><strong>Envoyer sur WhatsApp</strong><small>Recevoir mon code</small></div>
+        </div>
+      </a>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   PAGE VIP (AVEC STATUT)
+═══════════════════════════════════════════════════ */
+async function loadVipCoupon() {
+  const container = document.getElementById("vipCouponContent");
+  container.innerHTML = '<div class="loader"><div class="spinner"></div>Chargement...</div>';
+  
+  try {
+    const { predictions, error } = await fetchPredictions("is_vip");
+    if (error) throw error;
+    const items = filterItems(predictions);
+    const c = await fetchLatestCoupon();
+    
+    // Si pas de coupon ou pas de matchs
+    if (items.length === 0 || !c) { 
+      container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p style="font-size:18px;font-weight:900;color:var(--muted);">Pas de coupon actif</p></div>'; 
+      return; 
+    }
+
+    const totalOdd = c.vip_total_odd ? parseFloat(c.vip_total_odd).toFixed(2) : "—";
+    const codeBlock = c.vip_coupon_code ? `<div class="coupon-code-box"><small>CODE VIP</small><strong>${c.vip_coupon_code}</strong><button class="copy-btn" onclick="copyCode('${c.vip_coupon_code}')">📋 Copier</button></div>` : '';
+
+    container.innerHTML = `
+      <div class="coupon coupon-vip">
+        <div class="coupon-head">
+          <div class="coupon-title"><div class="coupon-icon icon-vip">🏆</div><div><h3>Coupon VIP</h3><small>${items.length} sélections</small></div></div>
+          <div class="cote">${totalOdd}</div>
+        </div>
+
+        <!-- BANNIÈRE STATUT ICI -->
+        ${statusBannerHTML(c.vip_outcome)}
+
+        <div class="coupon-items-container">${items.map(couponItemHTML).join("")}</div>
+        ${codeBlock}
+      </div>`;
+  } catch (e) { 
+    container.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>Erreur de chargement</p></div>'; 
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   RÉCLAMATION DU VIP PROMO (1XBET ID)
+═══════════════════════════════════════════════════ */
+function openClaimModal() {
+  document.getElementById("claimModal").classList.add("active");
+  document.getElementById("claimId1xbet").value = "";
+  document.getElementById("claimResult").textContent = "";
+}
+function closeClaimModal() {
+  document.getElementById("claimModal").classList.remove("active");
+}
+
+async function submitClaim() {
+  const id1xbet = document.getElementById("claimId1xbet").value.trim();
+  const result = document.getElementById("claimResult");
+  
+  if (!id1xbet) {
+    result.style.color = "var(--red)";
+    result.textContent = "❌ Entre ton ID 1xBet";
+    return;
+  }
+
+  result.style.color = "var(--muted)";
+  result.textContent = "⏳ Envoi en cours...";
+
+  try {
+    const { data: existing } = await supabaseClient.from("promo_claims").select("id").eq("device_id", DEVICE_ID).limit(1);
+    if (existing && existing.length > 0) {
+      result.style.color = "var(--red)";
+      result.textContent = "❌ Tu as déjà fait une demande.";
+      return;
+    }
+
+    const { error } = await supabaseClient.from("promo_claims").insert({
+      device_id: DEVICE_ID,
+      id_1xbet: id1xbet,
+      status: 'pending'
+    });
+
+    if (error) throw error;
+
+    result.style.color = "var(--green)";
+    result.textContent = "✅ Demande envoyée ! Validation sous 24h.";
+    setTimeout(() => { closeClaimModal(); }, 3000);
+
+  } catch (e) {
+    console.error(e);
+    result.style.color = "var(--red)";
+    result.textContent = "❌ Erreur lors de l'envoi.";
+  }
+}
+
+async function activateVipCode() {
+  const input = document.getElementById("activationCodeInput");
+  const result = document.getElementById("codeResult");
+  const code = input.value.trim().toUpperCase();
+  if (!code) { result.style.color = "var(--red)"; result.textContent = "❌ Entre un code"; return; }
+  result.style.color = "var(--muted)"; result.textContent = "⏳ Vérification...";
+  try {
+    const { data: codeData } = await supabaseClient.from("activation_codes").select("id, used, duration_days").eq("code", code).maybeSingle();
+    if (!codeData) { result.style.color = "var(--red)"; result.textContent = "❌ Code invalide"; return; }
+    if (codeData.used) { result.style.color = "var(--red)"; result.textContent = "❌ Code déjà utilisé"; return; }
+    
+    const endDate = new Date(); endDate.setDate(endDate.getDate() + (codeData.duration_days || VIP_DURATION_DAYS));
+    const { error: subError } = await supabaseClient.from("subscriptions").insert({ device_id: DEVICE_ID, start_date: new Date().toISOString(), end_date: endDate.toISOString(), amount: VIP_PRICE, payment_ref: "CODE-" + code, active: true });
+    
+    if (subError) { result.style.color = "var(--red)"; result.textContent = "❌ Erreur"; return; }
+    await supabaseClient.from("activation_codes").update({ used: true, used_by_device: DEVICE_ID, used_at: new Date().toISOString() }).eq("id", codeData.id);
+    
+    result.style.color = "var(--green)"; result.textContent = "✅ VIP activé !";
+    showToast("🎉 Bienvenue chez les VIP !");
+    setTimeout(async () => { await checkVipStatus(); renderVipPage(); }, 1500);
+  } catch(e) { result.style.color = "var(--red)"; result.textContent = "❌ Erreur"; }
+}
+
+/* NOTIFICATIONS */
+function openNotifPanel() { document.getElementById("notifModal").classList.add("active"); refreshNotifSwitches(); }
+function closeNotifPanel() { document.getElementById("notifModal").classList.remove("active"); }
+function refreshNotifSwitches() {
+  document.getElementById("switchFree").className = "switch" + (localStorage.getItem("kara_notif_free") === "true" ? " on" : "");
+  document.getElementById("switchBetclic").className = "switch" + (localStorage.getItem("kara_notif_betclic") === "true" ? " on" : "");
+  document.getElementById("switchVip").className = "switch" + (localStorage.getItem("kara_notif_vip") === "true" ? " on" : "");
+}
+async function toggleNotif(type) {
+  const key = "kara_notif_" + type;
+  const newValue = localStorage.getItem(key) !== "true";
+  if (type === 'vip' && newValue && !isVipUser) { showToast("🏆 VIP requis"); return; }
+  localStorage.setItem(key, newValue);
+  refreshNotifSwitches();
+  showToast(newValue ? "🔔 Activé" : "🔕 Désactivé");
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+(async function init() {
+  await checkVipStatus();
+  await renderHomeResults();
+})();
+</script>
+</body>
+        </html>
