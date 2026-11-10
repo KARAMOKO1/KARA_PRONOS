@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   KARA PRONOS — Service Worker v37
+   KARA PRONOS — Service Worker v38
    - HTML : network-first (toujours la dernière version)
    - Assets statiques : cache-first (rapide)
    - Supabase : jamais mis en cache
